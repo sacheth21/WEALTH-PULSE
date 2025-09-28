@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthPulse - Your Complete Financial Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #4f46e5;
+            --accent-color: #22d3ee;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #3b82f6;
+            --dark-bg: #0f172a;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background-color: var(--light-bg);
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0.05;
+        }
+        
+        /* Header */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-link {
+            color: var(--text-primary) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Live Indicator */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success-color);
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 15px 35px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(34, 211, 238, 0.4);
+        }
+        
+        /* Page Container */
+        .page {
+            display: none;
+            min-height: calc(100vh - 200px);
+            padding: 80px 0;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Section Styles */
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            background: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 18px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        /* Government Schemes */
+        .scheme-card {
+            margin-bottom: 25px;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(99, 102, 241, 0.02);
+            transition: all 0.3s ease;
+        }
+        
+        .scheme-card:hover {
+            background: rgba(99, 102, 241, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .scheme-card .card-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .scheme-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .badge-new {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            color: white;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 10px rgba(34, 211, 238, 0.3);
+        }
+        
+        /* Stocks */
+        .stock-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .stock-card:last-child {
+            border-bottom: none;
+        }
+        
+        .stock-card:hover {
+            background: rgba(99, 102, 241, 0.02);
+        }
+        
+        .stock-info {
+            flex: 1;
+        }
+        
+        .stock-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+        
+        .stock-symbol {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .stock-price {
+            font-weight: 700;
+            margin-right: 15px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .stock-price.updating-up {
+            color: var(--success-color);
+            transform: scale(1.1);
+        }
+        
+        .stock-price.updating-down {
+            color: var(--danger-color);
+            transform: scale(1.1);
+        }
+        
+        .stock-change {
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stock-change.positive {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+        
+        .stock-change.negative {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+        
+        /* Investment Calculator */
+        .calculator-form {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+            background: white;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+        
+        .btn-calculate {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 15px 35px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 1.05rem;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-calculate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+        }
+        
+        /* Results Section */
+        .results-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+        }
+        
+        .result-item {
+            text-align: center;
+            padding: 25px;
+            border-radius: 15px;
+            background: rgba(99, 102, 241, 0.05);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .result-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.1);
+        }
+        
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        
+        .result-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark-bg), #1e293b);
+            color: white;
+            padding: 60px 0 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+            transform: translateX(5px);
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            margin-right: 12px;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .social-links a:hover {
+            background: var(--accent-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(34, 211, 238, 0.3);
+        }
+        
+        .contact-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .contact-info i {
+            margin-right: 15px;
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="showPage('home')"><i class="bi bi-graph-up-arrow"></i> WealthPulse</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('home')">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('schemes')">Schemes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('stocks')">Stocks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('calculator')">Calculator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <section id="home-page" class="page active">
+        <div class="hero">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <div class="hero-content">
+                            <h1>Real-Time Financial Dashboard</h1>
+                            <p>Track live government schemes, monitor real-time stock growth, and calculate your investment returns with our comprehensive financial platform.</p>
+                            <a href="#" onclick="showPage('calculator')" class="btn btn-primary">
+                                <i class="bi bi-calculator"></i> Calculate Returns
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="hero-image text-center">
+                            <i class="bi bi-graph-up-arrow" style="font-size: 15rem; opacity: 0.2;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Government Schemes Page -->
+    <section id="schemes-page" class="page">
+        <div class="container">
+            <div class="section-title">
+                <h2>Government Schemes</h2>
+                <p>Stay updated with latest government initiatives and financial schemes</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-building"></i> Latest Schemes</span>
+                            <button class="btn btn-sm btn-light" id="refreshSchemes">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="card-body" id="schemesContainer">
+                            <div class="text-center py-4">
+                                <div class="loading"></div>
+                                <p class="mt-2">Loading schemes...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Growing Stocks Page -->
+    <section id="stocks-page" class="page">
+        <div class="container">
+            <div class="section-title">
+                <h2>Live Stock Market</h2>
+                <p>Monitor real-time stock performance and market trends
+                    <span class="live-indicator">
+                        <span class="live-dot"></span>
+                        LIVE
+                    </span>
+                </p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-graph-up"></i> Real-Time Stocks</span>
+                            <div>
+                                <span class="live-indicator">
+                                    <span class="live-dot"></span>
+                                    LIVE
+                                </span>
+                                <button class="btn btn-sm btn-light ms-2" id="refreshStocks">
+                                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0" id="stocksContainer">
+                            <div class="text-center py-4">
+                                <div class="loading"></div>
+                                <p class="mt-2">Loading stocks...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Calculator Page -->
+    <section id="calculator-page" class="page">
+        <div class="container">
+            <div class="section-title">
+                <h2>Investment Calculator</h2>
+                <p>Calculate how much your investment will grow over time with compound interest</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="calculator-form">
+                        <h4 class="mb-4"><i class="bi bi-calculator"></i> Investment Details</h4>
+                        <form id="investmentForm">
+                            <div class="mb-3">
+                                <label for="initialInvestment" class="form-label">Initial Investment ($)</label>
+                                <input type="number" class="form-control" id="initialInvestment" min="1" value="10000" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="monthlyContribution" class="form-label">Monthly Contribution ($)</label>
+                                <input type="number" class="form-control" id="monthlyContribution" min="0" value="500" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="annualReturn" class="form-label">Expected Annual Return (%)</label>
+                                <input type="number" class="form-control" id="annualReturn" min="0" max="100" step="0.1" value="7" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="investmentPeriod" class="form-label">Investment Period (Years)</label>
+                                <input type="number" class="form-control" id="investmentPeriod" min="1" max="50" value="10" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="compoundFrequency" class="form-label">Compound Frequency</label>
+                                <select class="form-select" id="compoundFrequency">
+                                    <option value="1">Annually</option>
+                                    <option value="2">Semi-Annually</option>
+                                    <option value="4">Quarterly</option>
+                                    <option value="12" selected>Monthly</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-calculate">
+                                <i class="bi bi-calculator"></i> Calculate Returns
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="col-lg-7">
+                    <div class="results-card" id="resultsCard">
+                        <h4 class="mb-4"><i class="bi bi-graph-up"></i> Investment Results</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="result-item">
+                                    <div class="result-value" id="totalContributions">$0</div>
+                                    <div class="result-label">Total Contributions</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="result-item">
+                                    <div class="result-value" id="finalValue">$0</div>
+                                    <div class="result-label">Final Value</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="result-item">
+                                    <div class="result-value" id="totalInterest">$0</div>
+                                    <div class="result-label">Total Interest Earned</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="result-item">
+                                    <div class="result-value" id="totalReturn">0%</div>
+                                    <div class="result-label">Total Return</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="investmentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <h3 class="footer-title">WealthPulse</h3>
+                    <p>Your complete financial dashboard for tracking government schemes, monitoring stocks, and calculating investment returns.</p>
+                    <div class="social-links mt-4">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showPage('home')"><i class="bi bi-house-door"></i> Home</a></li>
+                        <li><a href="#" onclick="showPage('schemes')"><i class="bi bi-building"></i> Government Schemes</a></li>
+                        <li><a href="#" onclick="showPage('stocks')"><i class="bi bi-graph-up"></i> Live Stocks</a></li>
+                        <li><a href="#" onclick="showPage('calculator')"><i class="bi bi-calculator"></i> Investment Calculator</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Contact</h5>
+                    <div class="contact-info">
+                        <i class="bi bi-envelope"></i>
+                        <span>sachethjnv@gmail.com</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="bi bi-telephone"></i>
+                        <span>+91 9449261936</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="bi bi-geo-alt"></i>
+                        <span>Bangalore, India</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 WealthPulse. All rights reserved. Made with <i class="bi bi-heart-fill text-danger"></i> by K U Sacheth</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Page management
+        let currentPage = 'home';
+        let stocksData = [];
+        let stocksUpdateInterval;
+        let investmentChart = null;
+
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId + '-page').classList.add('active');
+            currentPage = pageId;
+            
+            // Load page-specific content
+            if (pageId === 'schemes') {
+                loadGovernmentSchemes();
+            } else if (pageId === 'stocks') {
+                loadGrowingStocks();
+            } else if (pageId === 'calculator') {
+                setupInvestmentCalculator();
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial page load
+            showPage('home');
+        });
+        
+        // Government Schemes
+        function loadGovernmentSchemes() {
+            const schemesContainer = document.getElementById('schemesContainer');
+            
+            setTimeout(() => {
+                const schemes = [
+                    {
+                        title: "Pradhan Mantri Awas Yojana (PMAY)",
+                        description: "Housing for All by 2022 mission to provide affordable housing to urban poor.",
+                        date: "2023-10-15",
+                        category: "Housing",
+                        isNew: true
+                    },
+                    {
+                        title: "Atmanirbhar Bharat Abhiyan",
+                        description: "Self-reliant India campaign to promote and support local products and businesses.",
+                        date: "2023-09-28",
+                        category: "Economy",
+                        isNew: false
+                    },
+                    {
+                        title: "Digital India",
+                        description: "Initiative to transform India into a digitally empowered society and knowledge economy.",
+                        date: "2023-10-05",
+                        category: "Technology",
+                        isNew: false
+                    },
+                    {
+                        title: "Make in India",
+                        description: "Initiative to encourage multinational companies to manufacture their products in India.",
+                        date: "2023-10-10",
+                        category: "Manufacturing",
+                        isNew: true
+                    },
+                    {
+                        title: "Swachh Bharat Abhiyan",
+                        description: "Nationwide cleanliness campaign to clean up streets, roads and infrastructure of India.",
+                        date: "2023-09-20",
+                        category: "Sanitation",
+                        isNew: false
+                    }
+                ];
+                
+                schemesContainer.innerHTML = '';
+                
+                schemes.forEach(scheme => {
+                    const schemeCard = document.createElement('div');
+                    schemeCard.className = 'scheme-card';
+                    schemeCard.innerHTML = `
+                        <div class="card-title">${scheme.title} ${scheme.isNew ? '<span class="badge-new">NEW</span>' : ''}</div>
+                        <p>${scheme.description}</p>
+                        <div class="scheme-meta">
+                            <span><i class="bi bi-tag"></i> ${scheme.category}</span>
+                            <span><i class="bi bi-calendar3"></i> ${formatDate(scheme.date)}</span>
+                        </div>
+                    `;
+                    schemesContainer.appendChild(schemeCard);
+                });
+            }, 1500);
+        }
+        
+        // Growing Stocks with Real-Time Simulation
+        function loadGrowingStocks() {
+            const stocksContainer = document.getElementById('stocksContainer');
+            
+            // Initialize stocks data
+            stocksData = [
+                { name: "Tech Innovations Inc.", symbol: "TECH", price: 245.67, change: 5.23, changePercent: 2.18 },
+                { name: "Green Energy Solutions", symbol: "GREEN", price: 89.45, change: 3.21, changePercent: 3.72 },
+                { name: "Healthcare Plus", symbol: "HLTH", price: 156.89, change: -1.45, changePercent: -0.92 },
+                { name: "Future Finance", symbol: "FFIN", price: 78.34, change: 2.89, changePercent: 3.82 },
+                { name: "E-Commerce Giant", symbol: "ECOM", price: 312.56, change: 7.45, changePercent: 2.44 },
+                { name: "AI Robotics", symbol: "AIBO", price: 456.78, change: 12.34, changePercent: 2.78 },
+                { name: "Cloud Computing Corp", symbol: "CLOUD", price: 234.56, change: 4.56, changePercent: 1.98 },
+                { name: "Biotech Breakthrough", symbol: "BIO", price: 123.45, change: -2.34, changePercent: -1.86 }
+            ];
+            
+            setTimeout(() => {
+                renderStocks();
+                startRealTimeUpdates();
+            }, 1500);
+        }
+        
+        function renderStocks() {
+            const stocksContainer = document.getElementById('stocksContainer');
+            stocksContainer.innerHTML = '';
+            
+            stocksData.forEach((stock, index) => {
+                const stockCard = document.createElement('div');
+                stockCard.className = 'stock-card';
+                stockCard.id = `stock-${index}`;
+                const isPositive = stock.change >= 0;
+                stockCard.innerHTML = `
+                    <div class="stock-info">
+                        <div class="stock-name">${stock.name}</div>
+                        <div class="stock-symbol">${stock.symbol}</div>
+                    </div>
+                    <div class="stock-price" id="price-${index}">${stock.price.toFixed(2)}</div>
+                    <div class="stock-change ${isPositive ? 'positive' : 'negative'}" id="change-${index}">
+                        <i class="bi bi-${isPositive ? 'arrow-up' : 'arrow-down'}"></i>
+                        ${isPositive ? '+' : ''}${stock.change.toFixed(2)} (${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%)
+                    </div>
+                `;
+                stocksContainer.appendChild(stockCard);
+            });
+        }
+        
+        function startRealTimeUpdates() {
+            // Clear any existing interval
+            if (stocksUpdateInterval) {
+                clearInterval(stocksUpdateInterval);
+            }
+            
+            // Update stocks every 3 seconds
+            stocksUpdateInterval = setInterval(() => {
+                if (currentPage === 'stocks') {
+                    updateStockPrices();
+                }
+            }, 3000);
+        }
+        
+        function updateStockPrices() {
+            stocksData.forEach((stock, index) => {
+                // Generate random price change between -2% to +2%
+                const changePercent = (Math.random() * 4 - 2);
+                const oldPrice = stock.price;
+                const priceChange = oldPrice * (changePercent / 100);
+                const newPrice = oldPrice + priceChange;
+                
+                // Update stock data
+                stock.price = newPrice;
+                stock.change = priceChange;
+                stock.changePercent = changePercent;
+                
+                // Update DOM elements
+                const priceElement = document.getElementById(`price-${index}`);
+                const changeElement = document.getElementById(`change-${index}`);
+                
+                if (priceElement && changeElement) {
+                    // Add animation class
+                    priceElement.classList.add(changePercent >= 0 ? 'updating-up' : 'updating-down');
+                    
+                    // Update content
+                    priceElement.textContent = `${newPrice.toFixed(2)}`;
+                    changeElement.className = `stock-change ${changePercent >= 0 ? 'positive' : 'negative'}`;
+                    changeElement.innerHTML = `
+                        <i class="bi bi-${changePercent >= 0 ? 'arrow-up' : 'arrow-down'}"></i>
+                        ${changePercent >= 0 ? '+' : ''}${priceChange.toFixed(2)} (${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%)
+                    `;
+                    
+                    // Remove animation class after animation completes
+                    setTimeout(() => {
+                        priceElement.classList.remove('updating-up', 'updating-down');
+                    }, 1000);
+                }
+            });
+        }
+        
+        // Investment Calculator
+        function setupInvestmentCalculator() {
+            const form = document.getElementById('investmentForm');
+            const resultsCard = document.getElementById('resultsCard');
+            
+            // Remove existing event listener if any
+            const newForm = form.cloneNode(true);
+            form.parentNode.replaceChild(newForm, form);
+            
+            newForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const initialInvestment = parseFloat(document.getElementById('initialInvestment').value);
+                const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value);
+                const annualReturn = parseFloat(document.getElementById('annualReturn').value) / 100;
+                const investmentPeriod = parseInt(document.getElementById('investmentPeriod').value);
+                const compoundFrequency = parseInt(document.getElementById('compoundFrequency').value);
+                
+                const results = calculateInvestmentGrowth(
+                    initialInvestment,
+                    monthlyContribution,
+                    annualReturn,
+                    investmentPeriod,
+                    compoundFrequency
+                );
+                
+                document.getElementById('totalContributions').textContent = `${results.totalContributions.toLocaleString()}`;
+                document.getElementById('finalValue').textContent = `${results.finalValue.toLocaleString()}`;
+                document.getElementById('totalInterest').textContent = `${results.totalInterest.toLocaleString()}`;
+                document.getElementById('totalReturn').textContent = `${results.totalReturn.toFixed(1)}%`;
+                
+                resultsCard.style.display = 'block';
+                
+                updateInvestmentChart(results.yearlyData);
+            });
+            
+            function calculateInvestmentGrowth(initial, monthly, rate, years, frequency) {
+                const monthlyRate = rate / frequency;
+                const periods = years * frequency;
+                const monthlyContribution = monthly * (12 / frequency);
+                
+                let balance = initial;
+                const yearlyData = [];
+                let totalContributions = initial;
+                
+                for (let year = 1; year <= years; year++) {
+                    for (let period = 1; period <= frequency; period++) {
+                        balance = balance * (1 + monthlyRate) + monthlyContribution;
+                        totalContributions += monthlyContribution;
+                    }
+                    
+                    yearlyData.push({
+                        year: year,
+                        balance: balance,
+                        contributions: totalContributions
+                    });
+                }
+                
+                const totalInterest = balance - totalContributions;
+                const totalReturn = ((balance - initial) / initial * 100);
+                
+                return {
+                    finalValue: balance,
+                    totalContributions: totalContributions,
+                    totalInterest: totalInterest,
+                    totalReturn: totalReturn,
+                    yearlyData: yearlyData
+                };
+            }
+            
+            function updateInvestmentChart(yearlyData) {
+                const ctx = document.getElementById('investmentChart').getContext('2d');
+                
+                const labels = yearlyData.map(d => `Year ${d.year}`);
+                const balanceData = yearlyData.map(d => d.balance);
+                const contributionData = yearlyData.map(d => d.contributions);
+                
+                if (investmentChart) {
+                    investmentChart.destroy();
+                }
+                
+                investmentChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Total Value',
+                                data: balanceData,
+                                borderColor: '#6366f1',
+                                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Total Contributions',
+                                data: contributionData,
+                                borderColor: '#22d3ee',
+                                backgroundColor: 'rgba(34, 211, 238, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Investment Growth Over Time',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return ' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Format date helper
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+        
+        // Refresh buttons
+        document.getElementById('refreshSchemes').addEventListener('click', function() {
+            const schemesContainer = document.getElementById('schemesContainer');
+            schemesContainer.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="loading"></div>
+                    <p class="mt-2">Loading schemes...</p>
+                </div>
+            `;
+            loadGovernmentSchemes();
+        });
+        
+        document.getElementById('refreshStocks').addEventListener('click', function() {
+            const stocksContainer = document.getElementById('stocksContainer');
+            stocksContainer.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="loading"></div>
+                    <p class="mt-2">Loading stocks...</p>
+                </div>
+            `;
+            
+            // Clear existing interval
+            if (stocksUpdateInterval) {
+                clearInterval(stocksUpdateInterval);
+            }
+            
+            // Reload stocks and restart updates
+            loadGrowingStocks();
+        });
+    </script>
+</body>
+</html>
