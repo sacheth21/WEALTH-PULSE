@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthPulse - Your Complete Financial Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Premium CSS Files -->
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/premium-animations.css">
+    <link rel="stylesheet" href="assets/css/premium-components.css">
+    <link rel="stylesheet" href="assets/css/theme-system.css">
+</head>
+<body class="theme-light">
+    <!-- Animated Background -->
+    <div class="animated-bg premium-fade-in"></div>
+    <!-- Premium Page Loader -->
+    <div class="premium-loader">
+        <div class="premium-loading-spinner"></div>
+    </div>
+    
+    <!-- Theme Toggle -->
+    <button id="themeToggle" class="premium-theme-toggle">🌙</button>
+    
+    <!-- Premium Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top glass-card premium-nav">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <div class="brand-container premium-fade-in">
+                    <i class="bi bi-graph-up-arrow premium-bounce brand-icon"></i> 
+                    <span class="premium-slide-up brand-text" style="animation-delay: 0.2s">WealthPulse</span>
+                    <div class="brand-highlight"></div>
+                </div>
+            </a>
+            <button class="navbar-toggler premium-button" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto premium-stagger">
+                    <div class="nav-indicator"></div>
+                    <li class="nav-item">
+                        <a class="nav-link premium-hover-lift" href="index.html">
+                            <i class="bi bi-house"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link premium-hover-lift" href="stocks.html">
+                            <i class="bi bi-graph-up"></i> Stocks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link premium-hover-lift" href="calculator.html">
+                            <i class="bi bi-calculator"></i> Calculator
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link premium-hover-lift" href="schemes.html">
+                            <i class="bi bi-bank"></i> Schemes
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="schemes.html">Schemes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="stocks.html">Stocks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="calculator.html">Calculator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="animate-title">Real-Time Financial Dashboard</h1>
+                        <p class="animate-text" style="animation-delay: 0.3s;">Track live government schemes, monitor real-time stock growth, and calculate your investment returns with our comprehensive financial platform.</p>
+                        <a href="calculator.html" class="btn btn-gradient hover-lift" style="animation: fadeInScale 0.5s ease-out 0.6s both;">
+                            <i class="bi bi-calculator"></i> Calculate Returns
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image text-center position-relative">
+                        <i class="bi bi-graph-up-arrow" style="font-size: 15rem; opacity: 0.2;"></i>
+                        <div class="floating-element"><i class="bi bi-currency-dollar"></i></div>
+                        <div class="floating-element"><i class="bi bi-piggy-bank"></i></div>
+                        <div class="floating-element"><i class="bi bi-credit-card"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Overview -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Features</h2>
+                <p>Everything you need to manage your finances in one place</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-building" style="font-size: 3rem; color: var(--primary-color);"></i>
+                            <h4 class="mt-3">Government Schemes</h4>
+                            <p>Stay updated with the latest government initiatives and financial schemes</p>
+                            <a href="schemes.html" class="btn btn-outline-primary">View Schemes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-graph-up" style="font-size: 3rem; color: var(--primary-color);"></i>
+                            <h4 class="mt-3">Live Stock Market</h4>
+                            <p>Monitor real-time stock performance and market trends</p>
+                            <a href="stocks.html" class="btn btn-outline-primary">View Stocks</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-calculator" style="font-size: 3rem; color: var(--primary-color);"></i>
+                            <h4 class="mt-3">Investment Calculator</h4>
+                            <p>Calculate how much your investment will grow over time</p>
+                            <a href="calculator.html" class="btn btn-outline-primary">Use Calculator</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <h3 class="footer-title">WealthPulse</h3>
+                    <p>Your complete financial dashboard for tracking government schemes, monitoring stocks, and calculating investment returns.</p>
+                    <div class="social-links mt-4">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="bi bi-house-door"></i> Home</a></li>
+                        <li><a href="schemes.html"><i class="bi bi-building"></i> Government Schemes</a></li>
+                        <li><a href="stocks.html"><i class="bi bi-graph-up"></i> Live Stocks</a></li>
+                        <li><a href="calculator.html"><i class="bi bi-calculator"></i> Investment Calculator</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Contact</h5>
+                    <div class="contact-info">
+                        <i class="bi bi-envelope"></i>
+                        <span>sachethjnv@gmail.com</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="bi bi-telephone"></i>
+                        <span>+91 9449261936</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="bi bi-geo-alt"></i>
+                        <span>Bangalore, India</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 WealthPulse. All rights reserved. Made with <i class="bi bi-heart-fill text-danger"></i> by K U Sacheth</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Common JS -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
